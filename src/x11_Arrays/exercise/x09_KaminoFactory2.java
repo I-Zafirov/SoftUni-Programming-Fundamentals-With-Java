@@ -5,58 +5,52 @@ import java.util.Scanner;
 
 public class x09_KaminoFactory2 {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
 
-        int n = Integer.parseInt(scanner.nextLine());
+        Scanner scanner = new Scanner(System.in);
+        int length = Integer.parseInt(scanner.nextLine());
         String input = scanner.nextLine();
 
-        int masterCounter = 0;
-        int bestCounter = 0;
-        int bestSequence = 0;
-        int bestSequenceIndex = 0;
         int bestSequenceSum = 0;
-        int[] bestDnaSequence = new int[n];
+        int bestSequenceIndex = 0;
+        int count = 0;
+        int sequenceIndex = length;
+        int[] bestDnaSequence = new int[length];
 
-        while (!"Clone them!".equals(input)) {
-            int currentSum = 0, currentIndex = Integer.MAX_VALUE, currentSequence = 1;
-            int[] currentDNA = Arrays
-                    .stream(input.split("!+"))
-                    .limit(n)
+        while (!input.equals("Clone them!")) {
+            int[] numbers = Arrays.stream(input.split("!+"))
                     .mapToInt(Integer::parseInt)
                     .toArray();
+            int sum = 0;
+            int index = length;
+            count++;
 
-            masterCounter++;
-
-            for (int j : currentDNA) {
-                if (j == 1) {
-                    currentSum++;
+            for (int i = 0; i < numbers.length; i++) {
+                if ((i != numbers.length - 1) && numbers[i] == 1
+                        && numbers[i + 1] == 1 && index == length) {
+                    index = i;
                 }
+                sum += numbers[i];
             }
-            for (int i = 0; i < currentDNA.length - 1; i++) {
-                if (currentDNA[i] == currentDNA[i + 1] && currentDNA[i] == 1) {
-                    currentSequence++;
-                    if (i < currentIndex) {
-                        currentIndex = i;
-                    }
-                }
-            }
-
-            if ((currentSequence > bestSequence)
-                    || ((currentSequence == bestSequence) && (currentIndex < bestSequenceIndex))
-                    || ((currentSequence == bestSequence) && (currentIndex == bestSequenceIndex)
-                    && (currentSum > bestSequenceSum))) {
-                bestCounter = masterCounter;
-                bestSequence = currentSequence;
-                bestSequenceIndex = currentIndex;
-                bestSequenceSum = currentSum;
-                bestDnaSequence = currentDNA;
+            if (index == sequenceIndex && sum > bestSequenceSum) {
+                bestDnaSequence = numbers;
+                bestSequenceIndex = count;
+                bestSequenceSum = sum;
+                sequenceIndex = index;
+            } else if (index < sequenceIndex) {
+                bestDnaSequence = numbers;
+                bestSequenceIndex = count;
+                bestSequenceSum = sum;
+                sequenceIndex = index;
             }
             input = scanner.nextLine();
         }
-
-        System.out.printf("Best DNA sample %d with sum: %d.%n", bestCounter, bestSequenceSum);
-        for (int i : bestDnaSequence) {
-            System.out.print(i + " ");
+        if (bestSequenceSum == 0) {
+            bestSequenceIndex = 1;
         }
+        System.out.printf("Best DNA sample %d with sum: %d.%n",
+                bestSequenceIndex, bestSequenceSum);
+        Arrays.stream(bestDnaSequence)
+                .mapToObj(value -> value + " ")
+                .forEach(System.out::print);
     }
 }
