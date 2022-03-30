@@ -2,7 +2,7 @@ package T33FinExamPreparation;
 
 import java.util.Scanner;
 
-public class P1PasswordReset {
+public class P1PasswordResetSecretChat {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         // message
